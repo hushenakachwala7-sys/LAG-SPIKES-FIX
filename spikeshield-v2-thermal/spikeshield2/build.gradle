@@ -1,0 +1,39 @@
+plugins {
+    id 'fabric-loom' version '1.9-SNAPSHOT'
+}
+
+version = "2.0.0"
+group   = "com.spikeshield"
+
+base {
+    archivesName = "spikeshield"
+}
+
+repositories {
+    maven { url "https://maven.fabricmc.net/" }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.21.11"
+    mappings  loom.officialMojangMappings()
+
+    modImplementation "net.fabricmc:fabric-loader:0.18.6"
+
+    // Only the two lifecycle modules — bundled so no Fabric API jar needed
+    ["fabric-lifecycle-events-v1"].each {
+        def module = fabricApi.module(it, "0.141.3+1.21.11")
+        modImplementation(module)
+        include(module)
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") { expand "version": project.version }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+    withSourcesJar()
+}
