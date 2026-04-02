@@ -12,27 +12,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build project
+      - name: Build with Gradle
         run: |
-          if [ -f gradlew ]; then
-            chmod +x gradlew
-            ./gradlew build
-          elif [ -f pom.xml ]; then
-            mvn package
-          else
-            echo "No build tool found"
-          fi
+          chmod +x gradlew
+          ./gradlew build
 
       - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: jar-file
-          path: |
-            **/build/libs/*.jar
-            **/target/*.jar
+          path: build/libs/*.jar
